@@ -1,0 +1,1 @@
+{"name":"べーすこんばーたー","short_name":"べーすこんばーたー","description":"2進数・10進数・16進数をかんたん相互変換！","start_url":"./","scope":"./","display":"standalone","background_color":"#e8f6ff","theme_color":"#38aef4","icons":[{"src":"icon.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}],"version":"1.1.0"}

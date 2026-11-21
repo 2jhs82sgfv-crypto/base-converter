@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="ja"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#48b9f5"><meta name="description" content="2進数・10進数・16進数をかんたん相互変換！">
+<link rel="manifest" href="manifest.json"><link rel="icon" href="icon.png" type="image/png">
+<title>べーすこんばーたー</title>
+<style>
+:root{--blue:#1475ef;--ink:#172b55;--sky:#5ac8ff;--paper:#f8fbff;--line:#d5e4fb;--shadow:0 5px 0 #d3e5ff,0 9px 22px #1e68ad18}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--ink);font-family:system-ui,-apple-system,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif;background:linear-gradient(180deg,#70d0ff 0,#b8eaff 245px,#e8f6ff 560px,#d9f0ff 100%)}
+.hero{position:relative;overflow:hidden;padding:24px 16px 34px;text-align:center;color:#fff;background:linear-gradient(145deg,#4cc6ff,#2587f5 70%,#1b69d8);border-radius:0 0 30px 30px;box-shadow:0 6px 0 #8fdcff}
+.hero:before,.hero:after{content:"✦";position:absolute;color:#ffec43;font-size:32px;text-shadow:0 3px #edab17}.hero:before{left:7%;top:20px}.hero:after{right:9%;top:66px;font-size:24px}
+.brand{font-size:clamp(27px,7vw,39px);font-weight:1000;letter-spacing:-1px;line-height:1.2;color:#ffe743;text-shadow:-3px -3px 0 #12346d,3px -3px 0 #12346d,-3px 3px 0 #12346d,3px 3px 0 #12346d,0 6px 0 #12346d,0 8px 2px #fff;position:relative;z-index:1}.subtitle{margin:14px 0 0;font-size:15px;font-weight:800;text-shadow:0 2px #1453ae}.mascot{font-size:42px;margin-top:9px;filter:drop-shadow(0 3px 0 #1453ae)}
+main{width:min(100%,620px);padding:0 14px 28px;margin:-18px auto 0;position:relative}.panel{background:linear-gradient(145deg,#fff,#f2f7ff);border:2px solid #b8d4ff;border-radius:22px;padding:18px 16px;margin-bottom:16px;box-shadow:var(--shadow)}.section-title{display:flex;align-items:center;gap:9px;font-size:20px;font-weight:950;margin:0 0 15px}.section-title .emoji{font-size:24px}
+.base-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}.tab{border:2px solid #a9c4ed;border-radius:17px;background:#f8fbff;color:var(--ink);padding:10px 4px 9px;font:inherit;font-weight:900;cursor:pointer;box-shadow:0 3px 0 #d8e6fb}.tab small{display:block;font-size:12px;opacity:.72;margin-top:2px}.tab[data-base="2"]{--tab:#48baf4}.tab[data-base="10"]{--tab:#ffe84c}.tab[data-base="16"]{--tab:#ff9fbd}.tab.active{background:var(--tab);border-color:#fff;box-shadow:0 0 0 2px #83a9ed,0 4px 0 #8cb5f1;transform:translateY(-1px)}
+label{display:block;font-weight:850;font-size:14px;margin:6px 0 8px}.input-wrap{position:relative}input{width:100%;border:2px solid #9db9ed;border-radius:16px;background:#fff;padding:15px 46px 15px 15px;font:800 25px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace;color:#16264b;outline:none;box-shadow:inset 0 2px 4px #203d7510}input:focus{border-color:#2784f6;box-shadow:0 0 0 4px #4ba5ff24}input::placeholder{color:#a6b4cc;font-size:17px;font-family:system-ui;font-weight:600}.clear{position:absolute;right:9px;top:50%;transform:translateY(-50%);border:0;border-radius:50%;width:31px;height:31px;background:#e8effa;color:#6b7d9e;font-size:21px;cursor:pointer}
+.convert{width:100%;border:0;border-radius:18px;margin-top:14px;padding:15px;background:linear-gradient(100deg,#367fff,#0868e8);color:white;font:900 19px system-ui;box-shadow:0 5px 0 #1254c1;cursor:pointer}.convert:active{transform:translateY(3px);box-shadow:0 2px 0 #1254c1}.error{min-height:18px;color:#d33c63;font-size:13px;font-weight:700;margin-top:8px}
+.results{display:grid;gap:9px}.result{display:grid;grid-template-columns:82px minmax(0,1fr) 42px;align-items:center;gap:10px;padding:10px;border:1.5px solid #d3e3fa;border-radius:17px;background:#fff;box-shadow:0 2px 0 #e6effc}.result-label{border-radius:12px;text-align:center;padding:10px 3px;font-weight:950;font-size:14px;color:#15264c}.result[data-base="2"] .result-label{background:#b8e9ff}.result[data-base="10"] .result-label{background:#fff27b}.result[data-base="16"] .result-label{background:#ffc0d4}.value{font:800 20px/1.35 ui-monospace,SFMono-Regular,Menlo,monospace;overflow-wrap:anywhere;word-break:break-word;min-width:0;color:#15264c}.copy{width:40px;height:40px;border:1.5px solid #b8cdec;border-radius:12px;background:#f6faff;color:#24558f;font-size:18px;cursor:pointer;box-shadow:0 2px 0 #d7e4f7}.copy:active{transform:scale(.96)}.help{font-size:13px;line-height:1.75;margin:0;color:#435a82;font-weight:650}.foot{text-align:center;color:#55749f;font-size:12px;padding:0 15px 25px}
+@media(min-width:520px){.hero{padding-top:30px}.panel{padding:22px}.value{font-size:22px}}
+
+.update-panel{border:2px solid #8ccaff;background:linear-gradient(145deg,#f9fdff,#eaf5ff);border-radius:22px;padding:16px;margin:0 0 16px;box-shadow:var(--shadow)}
+.update-title{font-weight:950;font-size:18px;margin:0 0 8px}.update-note{font-size:13px;line-height:1.7;color:#435a82;margin:0 0 12px;font-weight:650}
+.update-actions{display:grid;gap:9px}.update-btn{display:block;width:100%;border:0;border-radius:15px;padding:13px;background:linear-gradient(100deg,#37b9f7,#1675ee);color:white;font:900 16px system-ui;cursor:pointer;box-shadow:0 4px 0 #1455b8}.update-status{font-size:12px;color:#365b91;font-weight:750;margin-top:10px;min-height:18px}.file-hidden{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+</style></head><body>
+<header class="hero"><div class="brand">べーすこんばーたー</div><p class="subtitle">2進数・10進数・16進数を<br>かんたん変換！</p><div class="mascot" aria-hidden="true">🧮 ✨</div></header>
+<main>
+<section class="panel"><h2 class="section-title"><span class="emoji">✏️</span>数値を入力</h2>
+<div class="base-tabs" role="group" aria-label="入力する進数">
+<button class="tab" data-base="2" aria-pressed="false">2進数<small>0・1</small></button>
+<button class="tab active" data-base="10" aria-pressed="true">10進数<small>0〜9</small></button>
+<button class="tab" data-base="16" aria-pressed="false">16進数<small>0〜F</small></button>
+</div>
+<label for="number">入力する数値</label><div class="input-wrap"><input id="number" inputmode="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="数値を入力" aria-describedby="error"><button class="clear" id="clear" aria-label="入力を消去" type="button">×</button></div>
+<div id="error" class="error" role="status"></div><button class="convert" id="convert" type="button">↻　変換する</button>
+</section>
+<section class="panel"><h2 class="section-title"><span class="emoji">📋</span>変換結果</h2><div class="results">
+<div class="result" data-base="2"><div class="result-label">2進数</div><div class="value" id="out2">—</div><button class="copy" data-copy="out2" aria-label="2進数をコピー">▢</button></div>
+<div class="result" data-base="10"><div class="result-label">10進数</div><div class="value" id="out10">—</div><button class="copy" data-copy="out10" aria-label="10進数をコピー">▢</button></div>
+<div class="result" data-base="16"><div class="result-label">16進数</div><div class="value" id="out16">—</div><button class="copy" data-copy="out16" aria-label="16進数をコピー">▢</button></div>
+</div></section>
+<section class="panel"><h2 class="section-title"><span class="emoji">💡</span>使い方</h2><p class="help">上のタブで入力する進数を選んで、数値を入力してください。変換するボタンを押すと、ほかの進数に変換されます。結果の右側を押すとコピーできます。<br><br>※整数のみ対応。大きな数値も正確に変換できます。</p></section>
+
+<section class="update-panel">
+<h2 class="update-title">🛠 アプリの更新・ZIP読み込み</h2>
+<p class="update-note">オンライン時は公開先の更新を確認します。アプリZIPを選ぶと自動解凍し、アプリ内に読み込んで更新できます。</p>
+<div class="update-actions">
+<button class="update-btn" id="checkUpdate" type="button">🌐 更新を確認する</button>
+<button class="update-btn" id="pickZip" type="button">📦 ZIPを選んで読み込む</button>
+<input class="file-hidden" id="zipFile" type="file" accept=".zip,application/zip">
+</div>
+<div class="update-status" id="updateStatus" role="status">更新確認はオンライン時に利用できます。</div>
+</section>
+</main><footer class="foot">べーすこんばーたー · オフラインでも使えるよ！</footer>
+<script>
+const input=document.querySelector('#number'),error=document.querySelector('#error');let base=10;
+const out={2:document.querySelector('#out2'),10:document.querySelector('#out10'),16:document.querySelector('#out16')};
+function parseBigIntBase(s,b){let n=0n;for(const ch of s.toUpperCase()){const d=parseInt(ch,16);if(!Number.isInteger(d)||d>=b)throw Error('invalid');n=n*BigInt(b)+BigInt(d);}return n;}
+function convert(){const raw=input.value.trim().replace(/\s+/g,'');error.textContent='';if(!raw){Object.values(out).forEach(x=>x.textContent='—');return;}const valid=base===2?/^[01]+$/:base===10?/^[0-9]+$/:/^[0-9a-fA-F]+$/;if(!valid.test(raw)){error.textContent=base===2?'2進数は「0」と「1」のみ入力できます。':base===10?'10進数は「0〜9」のみ入力できます。':'16進数は「0〜9」と「A〜F」のみ入力できます。';Object.values(out).forEach(x=>x.textContent='—');return;}try{const n=parseBigIntBase(raw,base);out[2].textContent=n.toString(2);out[10].textContent=n.toString(10);out[16].textContent=n.toString(16).toUpperCase();}catch(e){error.textContent='この数値を変換できませんでした。';Object.values(out).forEach(x=>x.textContent='—');}}
+document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>{base=Number(btn.dataset.base);document.querySelectorAll('.tab').forEach(b=>{b.classList.toggle('active',b===btn);b.setAttribute('aria-pressed',b===btn?'true':'false');});input.value='';input.placeholder=base===2?'例：1010':base===10?'例：255':'例：FF';convert();input.focus();}));
+input.addEventListener('input',convert);document.querySelector('#convert').addEventListener('click',convert);document.querySelector('#clear').addEventListener('click',()=>{input.value='';convert();input.focus();});
+document.querySelectorAll('[data-copy]').forEach(btn=>btn.addEventListener('click',async()=>{const text=out[btn.dataset.copy].textContent;if(!text||text==='—')return;try{await navigator.clipboard.writeText(text);}catch(e){const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}const old=btn.textContent;btn.textContent='✓';setTimeout(()=>btn.textContent=old,900);}));
+
+// Update checker + offline ZIP package importer.
+// ZIP import stores validated app files in a dedicated same-origin cache; the service worker serves them first.
+const updateStatus=document.querySelector('#updateStatus');
+function setUpdateStatus(t){if(updateStatus)updateStatus.textContent=t;}
+function versionParts(v){return String(v||'0').split('.').map(x=>parseInt(x,10)||0);}
+function isNewer(remote,local){const a=versionParts(remote),b=versionParts(local);for(let i=0;i<Math.max(a.length,b.length);i++){if((a[i]||0)>(b[i]||0))return true;if((a[i]||0)<(b[i]||0))return false;}return false;}
+async function checkRemoteVersion(){
+ if(!navigator.onLine||!location.protocol.startsWith('http'))return;
+ try{
+  const u=new URL('./manifest.json',location.href);u.searchParams.set('remote-check',String(Date.now()));
+  const r=await fetch(u.href,{cache:'no-store'});if(!r.ok)return;
+  const remote=await r.json(),local=localStorage.getItem('base-converter-import-version');
+  if(local&&remote.version&&isNewer(remote.version,local)){
+   await caches.delete('base-converter-imported-app-v1');
+   localStorage.removeItem('base-converter-import-version');
+   setUpdateStatus('新しい公開版 '+remote.version+' を検知しました。更新します…');
+   setTimeout(()=>location.reload(),400);
+  }else if(remote.version)setUpdateStatus('最新版を確認しました（v'+remote.version+'）。');
+ }catch(e){}
+}
+
+document.querySelector('#checkUpdate')?.addEventListener('click',async()=>{
+ if(!('serviceWorker'in navigator)||!location.protocol.startsWith('http')){setUpdateStatus('公開サイト上で開くと更新確認できます。');return;}
+ try{const reg=await navigator.serviceWorker.getRegistration();if(reg){await reg.update();setUpdateStatus('更新を確認しました。新しい版があれば読み込み後に反映されます。');if(reg.waiting){reg.waiting.postMessage({type:'SKIP_WAITING'});}}else{await navigator.serviceWorker.register('./sw.js');setUpdateStatus('更新機能を登録しました。次回起動時に確認します。');}}
+ catch(e){setUpdateStatus('更新確認に失敗しました。通信状態を確認してください。');}
+});
+document.querySelector('#pickZip')?.addEventListener('click',()=>document.querySelector('#zipFile').click());
+function findEndOfCentralDirectory(bytes){
+ const min=Math.max(0,bytes.length-65557);
+ for(let i=bytes.length-22;i>=min;i--)if(bytes[i]===0x50&&bytes[i+1]===0x4b&&bytes[i+2]===0x05&&bytes[i+3]===0x06)return i;
+ throw Error('ZIPの目録が見つかりません。');
+}
+async function unzipToFiles(file){
+ const bytes=new Uint8Array(await file.arrayBuffer()), view=new DataView(bytes.buffer);
+ const eocd=findEndOfCentralDirectory(bytes), count=view.getUint16(eocd+10,true), cdOffset=view.getUint32(eocd+16,true);
+ const decoder=new TextDecoder(), entries=[];let p=cdOffset;
+ for(let i=0;i<count;i++){
+  if(view.getUint32(p,true)!==0x02014b50)throw Error('ZIP形式を読み取れません。');
+  const flags=view.getUint16(p+8,true), method=view.getUint16(p+10,true), csize=view.getUint32(p+20,true), usize=view.getUint32(p+24,true);
+  const nl=view.getUint16(p+28,true), el=view.getUint16(p+30,true), cl=view.getUint16(p+32,true), lhoff=view.getUint32(p+42,true);
+  const name=decoder.decode(bytes.slice(p+46,p+46+nl)).replace(/\\/g,'/');
+  p+=46+nl+el+cl;
+  if(name.endsWith('/'))continue;
+  if(name.startsWith('/')||name.split('/').some(x=>x==='..'))throw Error('ZIP内に安全でないパスがあります。');
+  if(flags&1)throw Error('暗号化ZIPには対応していません。');
+  if(view.getUint32(lhoff,true)!==0x04034b50)throw Error('ZIPのファイル情報が不正です。');
+  const lnl=view.getUint16(lhoff+26,true),lel=view.getUint16(lhoff+28,true),start=lhoff+30+lnl+lel;
+  const compressed=bytes.slice(start,start+csize);let data;
+  if(method===0)data=compressed;
+  else if(method===8){
+   if(typeof DecompressionStream==='undefined')throw Error('このブラウザはZIP解凍に対応していません。Safariを最新版にしてください。');
+   let ds;try{ds=new DecompressionStream('deflate-raw');}catch(e){throw Error('このブラウザではZIPの解凍方式に対応していません。Safariを最新版にしてください。');}
+   const stream=new Blob([compressed]).stream().pipeThrough(ds);data=new Uint8Array(await new Response(stream).arrayBuffer());
+  }else throw Error('未対応のZIP圧縮方式です。');
+  if(data.length!==usize)throw Error('解凍後のサイズが一致しません。');
+  entries.push({name,data});
+ }
+ return entries;
+}
+document.querySelector('#zipFile')?.addEventListener('change',async ev=>{
+ const file=ev.target.files?.[0];ev.target.value='';if(!file)return;
+ try{
+  setUpdateStatus('ZIPを解凍しています…');
+  const entries=await unzipToFiles(file);
+  const indexEntry=entries.find(x=>/(^|\/)index\.html$/i.test(x.name));
+  if(!indexEntry)throw Error('ZIP内にindex.htmlが見つかりません。アプリ一式のZIPを選んでください。');
+  const root=indexEntry.name.slice(0,indexEntry.name.lastIndexOf('/')+1);
+  const appEntries=entries.filter(x=>x.name.startsWith(root)).map(x=>({path:x.name.slice(root.length),data:x.data})).filter(x=>x.path&&!x.path.startsWith('.')&&!x.path.split('/').some(s=>s==='..'));
+  if(!appEntries.some(x=>x.path==='index.html'))throw Error('アプリのindex.htmlを確認できません。');
+  if(!('caches'in window))throw Error('このブラウザではアプリ内ZIP読み込みに対応していません。');
+  const cacheName='base-converter-imported-app-v1';
+  await caches.delete(cacheName);const cache=await caches.open(cacheName);
+  const baseUrl=new URL('./',location.href);
+  for(const entry of appEntries){
+   const url=new URL(entry.path,baseUrl);
+   const type=entry.path.endsWith('.html')?'text/html; charset=utf-8':entry.path.endsWith('.js')?'text/javascript; charset=utf-8':entry.path.endsWith('.json')?'application/json':entry.path.endsWith('.css')?'text/css':entry.path.endsWith('.png')?'image/png':'application/octet-stream';
+   await cache.put(url.href,new Response(entry.data,{headers:{'Content-Type':type}}));
+  }
+  const manifestEntry=appEntries.find(x=>x.path==='manifest.json');
+  if(manifestEntry){try{const m=JSON.parse(new TextDecoder().decode(manifestEntry.data));if(m.version)localStorage.setItem('base-converter-import-version',m.version);}catch(e){}}
+  setUpdateStatus(`ZIPを解凍して${appEntries.length}個のファイルを読み込みました。再読み込みします…`);
+  setTimeout(()=>location.reload(),500);
+ }catch(err){setUpdateStatus('読み込みできませんでした：'+(err?.message||'ZIPを確認してください。'));}
+});
+if('serviceWorker'in navigator&&location.protocol.startsWith('http')){
+ navigator.serviceWorker.register('./sw.js').then(async reg=>{
+  try{await reg.update();if(reg.waiting){reg.waiting.postMessage({type:'SKIP_WAITING'});}}
+  catch(e){}
+  if(reg.waiting)setUpdateStatus('新しい更新を適用しています…');
+ }).catch(()=>{});
+}
+
+</script></body></html>
